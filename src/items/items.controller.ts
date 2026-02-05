@@ -7,6 +7,7 @@ import {
   Render,
   Redirect,
   Res,
+  Session,
 } from '@nestjs/common';
 import { type Response } from 'express';
 import { ItemsService } from './items.service';
@@ -19,9 +20,9 @@ export class ItemsController {
 
   @Get('create')
   @Render('items/create')
-  async createPage() {
+  async createPage(@Session() session: Record<string, any>) {
     const suppliers = await this.itemsService.getAllSuppliers();
-    return { suppliers };
+    return { suppliers, user: session?.user };
   }
 
   @Post()
@@ -33,17 +34,20 @@ export class ItemsController {
 
   @Get()
   @Render('items/index')
-  async findAll() {
+  async findAll(@Session() session: Record<string, any>) {
     const items = await this.itemsService.findAll();
-    return { items };
+    return { items, user: session?.user };
   }
 
   @Get(':id/edit')
   @Render('items/edit')
-  async editPage(@Param('id') id: string) {
+  async editPage(
+    @Param('id') id: string,
+    @Session() session: Record<string, any>,
+  ) {
     const item = await this.itemsService.findOne(+id);
     const suppliers = await this.itemsService.getAllSuppliers();
-    return { item, suppliers };
+    return { item, suppliers, user: session?.user };
   }
 
   @Post(':id/update')

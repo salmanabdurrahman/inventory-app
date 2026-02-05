@@ -362,6 +362,75 @@
       .stat-card.highlight .stat-label {
         color: #000;
       }
+
+      /* Dashboard */
+      .welcome-card {
+        background: #fff;
+        border: 3px solid #000;
+        border-radius: 16px;
+        box-shadow: 8px 8px 0px #000;
+        padding: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .welcome-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .welcome-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+      }
+
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .menu-card {
+        background: #fff;
+        border: 3px solid #000;
+        border-radius: 12px;
+        box-shadow: 6px 6px 0px #000;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: #000;
+        transition: all 0.15s;
+        display: block;
+      }
+
+      .menu-card:hover {
+        transform: translate(-4px, -4px);
+        box-shadow: 10px 10px 0px #000;
+      }
+
+      .menu-icon {
+        width: 60px;
+        height: 60px;
+        background: #fbbf24;
+        border: 3px solid #000;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .menu-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+
+      .menu-desc {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
     </style>
   </head>
   <body>
@@ -374,7 +443,18 @@
         <div class='nav-links'>
           <a href='/suppliers' class='nav-link'>Suppliers</a>
           <a href='/items' class='nav-link'>Items</a>
-          <a href='/users/login' class='nav-btn'>Login</a>
+          {{#if user}}
+            <span class='nav-link' style='cursor: default;'>
+              <i class='fas fa-user'></i>
+              {{user.name}}
+            </span>
+            <a href='/users/logout' class='nav-btn'>
+              <i class='fas fa-sign-out-alt'></i>
+              Logout
+            </a>
+          {{else}}
+            <a href='/users/login' class='nav-btn'>Login</a>
+          {{/if}}
         </div>
       </div>
     </nav>

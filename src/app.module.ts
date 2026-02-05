@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { ItemsModule } from './items/items.module';
 import { UsersModule } from './users/users.module';
+import { SeederModule } from './seeder/seeder.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     SuppliersModule,
     ItemsModule,
     UsersModule,
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [AppService],

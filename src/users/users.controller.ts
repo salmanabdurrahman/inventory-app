@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, Res, Session } from '@nestjs/common';
+import type { Request, Response } from 'express';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  @Get('login')
+  loginPage(@Session() session: Record<string, any>, @Res() res: Response) {
+    // If already logged in, redirect to home
+    if (session && session.user) {
+      return res.redirect('/');
+    }
+    // Render without layout
+    return res.render('users/login', { layout: false, error: null });
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Post('login')
+  async login(
+    @Body() body: { email: string; password: string },
+    @Session() session: Record<string, any>,
+    @Res() res: Response,
+  ) {
+    const user = await this.usersService.validateUser(
+      body.email,
+      body.password,
+    );
+
+    if (user) {
+      session.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      };
+      return res.redirect('/');
+    }
+
+    return res.render('users/login', {
+      layout: false,
+      error: 'Email atau password salah!',
+      email: body.email,
+    });
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Get('logout')
+  logout(@Req() req: Request, @Res() res: Response) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+      }
+      res.redirect('/users/login');
+    });
   }
 }
