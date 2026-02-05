@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
+  Delete,
   Body,
   Param,
   Render,
@@ -50,7 +52,7 @@ export class ItemsController {
     return { item, suppliers, user: session?.user };
   }
 
-  @Post(':id/update')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateItemDto: UpdateItemDto,
@@ -60,7 +62,7 @@ export class ItemsController {
     return res.redirect('/items');
   }
 
-  @Post(':id/delete')
+  @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response) {
     await this.itemsService.remove(+id);
     return res.redirect('/items');

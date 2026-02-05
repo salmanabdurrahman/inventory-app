@@ -6,7 +6,7 @@
       ></i>Edit Item</h1>
   </div>
   <div class='card'>
-    <form action='/items/{{item.id}}/update' method='POST'>
+    <form action='/items/{{item.id}}?_method=PUT' method='POST'>
       <div class='form-group'>
         <label class='form-label'>Item Name
           <span style='color: #ef4444;'>*</span></label>

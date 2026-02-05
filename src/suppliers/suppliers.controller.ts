@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
+  Delete,
   Body,
   Param,
   Render,
@@ -48,7 +50,7 @@ export class SuppliersController {
     return { supplier, user: session?.user };
   }
 
-  @Post(':id/update')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateSupplierDto: UpdateSupplierDto,
@@ -58,7 +60,7 @@ export class SuppliersController {
     return res.redirect('/suppliers');
   }
 
-  @Post(':id/delete')
+  @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response) {
     await this.suppliersService.remove(+id);
     return res.redirect('/suppliers');

@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "vercel-build": "npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -31,6 +32,7 @@
     "bcrypt": "^6.0.0",
     "express-session": "^1.19.0",
     "hbs": "^4.2.0",
+    "method-override": "^3.0.0",
     "mysql2": "^3.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -44,6 +46,7 @@
     "@nestjs/testing": "^11.0.1",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
+    "@types/method-override": "^3.0.0",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
