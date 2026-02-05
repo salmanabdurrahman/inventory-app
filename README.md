@@ -1,98 +1,577 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# GudangApp - Inventory Management System
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A modern warehouse inventory management application built with NestJS, TypeORM, and Handlebars. This application provides a complete solution for managing suppliers, items, and stock in a warehouse environment.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Demo Links](#demo-links)
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Database Design](#database-design)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Application](#running-the-application)
+- [Deployment](#deployment)
+- [Available Scripts](#available-scripts)
+- [API Endpoints](#api-endpoints)
+- [API Testing Reference (Postman)](#api-testing-reference-postman)
+- [Screenshots](#screenshots)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Demo Links
 
-## Project setup
+| Resource              | Link                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Live Demo (Vercel)    | [https://inventory-app-nine-smoky.vercel.app](https://inventory-app-nine-smoky.vercel.app)                               |
+| Postman Documentation | [https://documenter.getpostman.com/view/38960737/2sBXc8o3XY](https://documenter.getpostman.com/view/38960737/2sBXc8o3XY) |
 
-```bash
-$ pnpm install
+## Project Overview
+
+GudangApp is a full-stack inventory management system designed to help businesses track their warehouse inventory efficiently. The application features:
+
+- **Supplier Management**: Add, edit, and delete supplier information including contact details and addresses
+- **Item Management**: Manage inventory items with stock levels, pricing, and supplier associations
+- **User Authentication**: Secure login system with session-based authentication
+- **Dashboard**: Overview of all inventory operations with quick navigation
+- **Auto Seeding**: Automatic database seeding with sample data for development
+
+## Features
+
+- User authentication with bcrypt password hashing
+- Session-based login system
+- CRUD operations for suppliers and items
+- Responsive Neo-Brutalism UI design
+- Database auto-synchronization with TypeORM
+- Modular seeder system for sample data
+- Server-side rendering with Handlebars templates
+
+## Tech Stack
+
+### Backend
+
+| Technology      | Version | Purpose                     |
+| --------------- | ------- | --------------------------- |
+| NestJS          | ^11.0.1 | Backend framework           |
+| TypeORM         | ^0.3.28 | ORM for database operations |
+| MySQL2          | ^3.16.3 | MySQL database driver       |
+| Express Session | ^1.19.0 | Session management          |
+| bcrypt          | ^6.0.0  | Password hashing            |
+
+### Frontend
+
+| Technology       | Version | Purpose         |
+| ---------------- | ------- | --------------- |
+| Handlebars (hbs) | ^4.2.0  | Template engine |
+| Font Awesome     | 6.0.0   | Icons           |
+| Space Grotesk    | -       | Typography      |
+
+### Development
+
+| Technology | Version | Purpose              |
+| ---------- | ------- | -------------------- |
+| TypeScript | ^5.7.3  | Type-safe JavaScript |
+| ESLint     | ^9.18.0 | Code linting         |
+| Prettier   | ^3.4.2  | Code formatting      |
+| Jest       | ^30.0.0 | Testing framework    |
+
+## Database Design
+
+The application uses MySQL with TypeORM. The database consists of three main entities:
+
+### Entity Relationship Diagram
+
+```
+┌─────────────────────┐       ┌─────────────────────┐
+│       User          │       │      Supplier       │
+├─────────────────────┤       ├─────────────────────┤
+│ id (PK)             │       │ id (PK)             │
+│ name                │       │ name                │
+│ email               │       │ phone               │
+│ password            │       │ email               │
+│ role (enum)         │       │ address             │
+│ isActive            │       │ createdAt           │
+│ createdAt           │       │ updatedAt           │
+│ updatedAt           │       └──────────┬──────────┘
+└─────────────────────┘                  │
+                                         │ 1:N
+                                         │
+                              ┌──────────▼──────────┐
+                              │        Item         │
+                              ├─────────────────────┤
+                              │ id (PK)             │
+                              │ name                │
+                              │ stock               │
+                              │ price               │
+                              │ supplierId (FK)     │
+                              │ createdAt           │
+                              │ updatedAt           │
+                              └─────────────────────┘
 ```
 
-## Compile and run the project
+### Entity Details
 
-```bash
-# development
-$ pnpm run start
+#### User Entity
 
-# watch mode
-$ pnpm run start:dev
+| Column    | Type     | Description                    |
+| --------- | -------- | ------------------------------ |
+| id        | INT (PK) | Auto-increment primary key     |
+| name      | VARCHAR  | User's full name               |
+| email     | VARCHAR  | User's email (unique)          |
+| password  | VARCHAR  | Bcrypt hashed password         |
+| role      | ENUM     | 'admin' or 'user'              |
+| isActive  | BOOLEAN  | Account status (default: true) |
+| createdAt | DATETIME | Record creation timestamp      |
+| updatedAt | DATETIME | Record update timestamp        |
 
-# production mode
-$ pnpm run start:prod
+#### Supplier Entity
+
+| Column    | Type     | Description                |
+| --------- | -------- | -------------------------- |
+| id        | INT (PK) | Auto-increment primary key |
+| name      | VARCHAR  | Supplier company name      |
+| phone     | VARCHAR  | Contact phone number       |
+| email     | VARCHAR  | Contact email (nullable)   |
+| address   | VARCHAR  | Business address           |
+| createdAt | DATETIME | Record creation timestamp  |
+| updatedAt | DATETIME | Record update timestamp    |
+
+#### Item Entity
+
+| Column     | Type     | Description                |
+| ---------- | -------- | -------------------------- |
+| id         | INT (PK) | Auto-increment primary key |
+| name       | VARCHAR  | Item name                  |
+| stock      | INT      | Current stock quantity     |
+| price      | INT      | Item price in Rupiah       |
+| supplierId | INT (FK) | Reference to Supplier      |
+| createdAt  | DATETIME | Record creation timestamp  |
+| updatedAt  | DATETIME | Record update timestamp    |
+
+### Relationships
+
+- **Supplier → Item**: One-to-Many (A supplier can have many items)
+- **Item → Supplier**: Many-to-One with CASCADE delete (Deleting a supplier removes associated items)
+
+## Project Structure
+
+```
+inventory-app/
+├── src/
+│   ├── items/                  # Items module
+│   │   ├── dto/                # Data Transfer Objects
+│   │   ├── entities/           # TypeORM entity
+│   │   ├── items.controller.ts
+│   │   ├── items.module.ts
+│   │   └── items.service.ts
+│   ├── suppliers/              # Suppliers module
+│   │   ├── dto/
+│   │   ├── entities/
+│   │   ├── suppliers.controller.ts
+│   │   ├── suppliers.module.ts
+│   │   └── suppliers.service.ts
+│   ├── users/                  # Users/Auth module
+│   │   ├── dto/
+│   │   ├── entities/
+│   │   ├── users.controller.ts
+│   │   ├── users.module.ts
+│   │   └── users.service.ts
+│   ├── seeder/                 # Database seeder
+│   │   ├── data/               # Seed data files
+│   │   │   ├── suppliers.data.ts
+│   │   │   ├── items.data.ts
+│   │   │   └── index.ts
+│   │   ├── services/           # Individual seeders
+│   │   │   ├── supplier.seeder.ts
+│   │   │   ├── item.seeder.ts
+│   │   │   └── index.ts
+│   │   ├── seeder.module.ts
+│   │   └── seeder.service.ts
+│   ├── app.controller.ts
+│   ├── app.module.ts
+│   ├── app.service.ts
+│   └── main.ts
+├── views/                      # Handlebars templates
+│   ├── items/
+│   │   ├── index.hbs
+│   │   ├── create.hbs
+│   │   └── edit.hbs
+│   ├── suppliers/
+│   │   ├── index.hbs
+│   │   ├── create.hbs
+│   │   └── edit.hbs
+│   ├── users/
+│   │   └── login.hbs
+│   ├── dashboard.hbs
+│   └── layout.hbs
+├── test/                       # Test files
+├── .env.example                # Environment variables template
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-## Run tests
+## Installation
+
+### Prerequisites
+
+- Node.js >= 18.x
+- pnpm (recommended) or npm
+- MySQL >= 8.0
+
+### Steps
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/salmanabdurrahman/inventory-app
+   cd inventory-app
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   # or
+   npm install
+   ```
+
+3. **Create MySQL database**
+
+   ```sql
+   CREATE DATABASE inventory_db;
+   ```
+
+4. **Configure environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` with your database credentials.
+
+## Configuration
+
+Create a `.env` file in the root directory:
+
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=your_password
+DB_DATABASE=inventory_db
+
+# Application Configuration
+PORT=3000
+SESSION_SECRET=your_random_session_secret
+NODE_ENV=development
+```
+
+### Configuration Options
+
+| Variable       | Description                   | Default      |
+| -------------- | ----------------------------- | ------------ |
+| DB_HOST        | MySQL server hostname         | localhost    |
+| DB_PORT        | MySQL server port             | 3306         |
+| DB_USERNAME    | MySQL username                | root         |
+| DB_PASSWORD    | MySQL password                | -            |
+| DB_DATABASE    | Database name                 | inventory_db |
+| PORT           | Application port              | 3000         |
+| SESSION_SECRET | Secret for session encryption | -            |
+| NODE_ENV       | Environment mode              | development  |
+
+## Running the Application
+
+### Development Mode
 
 ```bash
-# unit tests
-$ pnpm run test
+pnpm run start:dev
+# or
+npm run start:dev
+```
 
-# e2e tests
-$ pnpm run test:e2e
+The application will be available at `http://localhost:3000`
 
-# test coverage
-$ pnpm run test:cov
+### Production Mode
+
+```bash
+pnpm run build
+pnpm run start:prod
+# or
+npm run build
+npm run start:prod
+```
+
+### Debug Mode
+
+```bash
+pnpm run start:debug
 ```
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Deploying to Vercel
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+This application is configured for deployment on Vercel with serverless functions.
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+#### Prerequisites
+
+1. A [Vercel](https://vercel.com) account
+2. A [TiDB Cloud](https://tidbcloud.com) account (for MySQL database)
+3. Git repository connected to Vercel
+
+#### Step 1: Setup TiDB Cloud Database
+
+1. Create a free TiDB Cloud Serverless cluster
+2. Note down the connection details:
+   - Host (e.g., `gateway01.ap-southeast-1.prod.aws.tidbcloud.com`)
+   - Port (usually `4000`)
+   - Username
+   - Password
+   - Database name
+
+#### Step 2: Configure Vercel Environment Variables
+
+In your Vercel project dashboard, go to **Settings → Environment Variables** and add:
+
+| Variable         | Value                         | Description                   |
+| ---------------- | ----------------------------- | ----------------------------- |
+| `NODE_ENV`       | `production`                  | Environment mode              |
+| `DB_HOST`        | `gateway01.xxx.tidbcloud.com` | TiDB Cloud host               |
+| `DB_PORT`        | `4000`                        | TiDB Cloud port               |
+| `DB_USERNAME`    | `your_tidb_username`          | TiDB Cloud username           |
+| `DB_PASSWORD`    | `your_tidb_password`          | TiDB Cloud password           |
+| `DB_DATABASE`    | `your_database_name`          | TiDB Cloud database name      |
+| `SESSION_SECRET` | `random_32_character_string`  | Secret for session encryption |
+
+#### Step 3: Deploy
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Vercel will automatically detect the configuration and deploy
+
+#### Vercel Configuration
+
+The project includes a `vercel.json` configuration file that:
+
+- Uses `@vercel/node` for serverless function deployment
+- Includes `views/` and `public/` directories for templates and static assets
+- Routes all requests through the NestJS handler
+
+```json
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "builds": [
+    {
+      "src": "dist/main.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["views/**", "public/**", "dist/**"]
+      }
+    }
+  ]
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+#### Important Notes
 
-## Resources
+- **SSL/TLS**: SSL is automatically enabled for TiDB Cloud connections in production
+- **Cold Starts**: Serverless functions may have cold start delays on first request
+- **Sessions**: Session data is stored in memory; for production, consider using Redis
 
-Check out a few resources that may come in handy when working with NestJS:
+## Available Scripts
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+| Script        | Description                         |
+| ------------- | ----------------------------------- |
+| `start`       | Start the application               |
+| `start:dev`   | Start with hot-reload (development) |
+| `start:debug` | Start with debugging enabled        |
+| `start:prod`  | Start production build              |
+| `build`       | Build the application               |
+| `format`      | Format code with Prettier           |
+| `lint`        | Run ESLint                          |
+| `test`        | Run unit tests                      |
+| `test:watch`  | Run tests in watch mode             |
+| `test:cov`    | Run tests with coverage             |
+| `test:e2e`    | Run end-to-end tests                |
 
-## Support
+## API Endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Authentication
 
-## Stay in touch
+| Method | Endpoint        | Description   |
+| ------ | --------------- | ------------- |
+| GET    | `/users/login`  | Login page    |
+| POST   | `/users/login`  | Process login |
+| GET    | `/users/logout` | Logout user   |
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Dashboard
+
+| Method | Endpoint | Description    |
+| ------ | -------- | -------------- |
+| GET    | `/`      | Dashboard page |
+
+### Suppliers
+
+| Method | Endpoint              | Description          |
+| ------ | --------------------- | -------------------- |
+| GET    | `/suppliers`          | List all suppliers   |
+| GET    | `/suppliers/create`   | Create supplier form |
+| POST   | `/suppliers`          | Create new supplier  |
+| GET    | `/suppliers/:id/edit` | Edit supplier form   |
+| PUT    | `/suppliers/:id`      | Update supplier      |
+| DELETE | `/suppliers/:id`      | Delete supplier      |
+
+### Items
+
+| Method | Endpoint          | Description      |
+| ------ | ----------------- | ---------------- |
+| GET    | `/items`          | List all items   |
+| GET    | `/items/create`   | Create item form |
+| POST   | `/items`          | Create new item  |
+| GET    | `/items/:id/edit` | Edit item form   |
+| PUT    | `/items/:id`      | Update item      |
+| DELETE | `/items/:id`      | Delete item      |
+
+## API Testing Reference (Postman)
+
+The following table provides detailed information for testing API endpoints using Postman or similar tools.
+
+### Authentication Endpoints
+
+| Method | Endpoint        | Content-Type                        | Request Body                                  | Description                          |
+| ------ | --------------- | ----------------------------------- | --------------------------------------------- | ------------------------------------ |
+| POST   | `/users/login`  | `application/x-www-form-urlencoded` | `email=admin@gudangapp.com&password=admin123` | Authenticate user and create session |
+| GET    | `/users/logout` | -                                   | -                                             | Destroy session and logout           |
+
+### Supplier Endpoints
+
+| Method | Endpoint         | Content-Type                        | Request Body | Description                   |
+| ------ | ---------------- | ----------------------------------- | ------------ | ----------------------------- |
+| GET    | `/suppliers`     | -                                   | -            | Get all suppliers (HTML page) |
+| POST   | `/suppliers`     | `application/x-www-form-urlencoded` | See below    | Create new supplier           |
+| PUT    | `/suppliers/:id` | `application/x-www-form-urlencoded` | See below    | Update existing supplier      |
+| DELETE | `/suppliers/:id` | -                                   | -            | Delete supplier by ID         |
+
+**Create/Update Supplier Body:**
+
+```
+name=PT Example Company
+phone=021-1234567
+email=contact@example.com
+address=Jl. Example Street No. 123, Jakarta
+```
+
+| Field   | Type   | Required | Description           |
+| ------- | ------ | -------- | --------------------- |
+| name    | string | Yes      | Supplier company name |
+| phone   | string | Yes      | Contact phone number  |
+| email   | string | No       | Contact email address |
+| address | string | Yes      | Business address      |
+
+### Item Endpoints
+
+| Method | Endpoint     | Content-Type                        | Request Body | Description               |
+| ------ | ------------ | ----------------------------------- | ------------ | ------------------------- |
+| GET    | `/items`     | -                                   | -            | Get all items (HTML page) |
+| POST   | `/items`     | `application/x-www-form-urlencoded` | See below    | Create new item           |
+| PUT    | `/items/:id` | `application/x-www-form-urlencoded` | See below    | Update existing item      |
+| DELETE | `/items/:id` | -                                   | -            | Delete item by ID         |
+
+**Create/Update Item Body:**
+
+```
+name=Laptop ASUS ROG
+stock=50
+price=15000000
+supplierId=1
+```
+
+| Field      | Type   | Required | Description              |
+| ---------- | ------ | -------- | ------------------------ |
+| name       | string | Yes      | Item name                |
+| stock      | number | Yes      | Stock quantity (min: 0)  |
+| price      | number | Yes      | Price in Rupiah (min: 0) |
+| supplierId | number | Yes      | Reference to supplier ID |
+
+### Testing Notes
+
+1. **Session-based Auth**: This application uses session-based authentication. In Postman, enable "Cookie" management to maintain sessions across requests.
+2. **Content-Type**: All POST requests use `application/x-www-form-urlencoded` format (HTML form submissions).
+3. **CSRF Protection**: Currently not implemented, so direct API testing works without CSRF tokens.
+4. **Redirects**: Most POST endpoints redirect to list pages after successful operations. In Postman, disable "Follow Redirects" to see the 302 response.
+
+## Screenshots
+
+### Login Page
+
+![Login Page](./screenshots/login.png)
+
+### Dashboard
+
+![Dashboard](./screenshots/dashboard.png)
+
+### Suppliers List
+
+![Suppliers](./screenshots/suppliers.png)
+
+### Items List
+
+![Items](./screenshots/items.png)
+
+## Default Credentials
+
+After initial setup, the seeder will create a default admin user:
+
+| Field    | Value               |
+| -------- | ------------------- |
+| Email    | admin@gudangapp.com |
+| Password | admin123            |
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Error**
+   - Ensure MySQL is running
+   - Verify credentials in `.env` file
+   - Check if database exists
+
+2. **Port Already in Use**
+   - Change the PORT in `.env`
+   - Kill the process using the port: `lsof -ti:3000 | xargs kill`
+
+3. **Module Not Found**
+   - Run `pnpm install` to ensure all dependencies are installed
+   - Delete `node_modules` and reinstall
+
+4. **TypeORM Sync Issues**
+   - Set `synchronize: true` in `app.module.ts` for development
+   - For production, use migrations instead
+
+### Logs
+
+Check the console output for detailed error messages. The application uses NestJS Logger for structured logging.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-feature`
+3. Commit changes: `git commit -m 'Add new feature'`
+4. Push to branch: `git push origin feature/new-feature`
+5. Submit a Pull Request
+
+### Code Style
+
+- Follow TypeScript best practices
+- Use ESLint and Prettier configurations provided
+- Write descriptive commit messages
+- Add JSDoc comments for public methods
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is UNLICENSED - see the package.json for details.
+
+**Built with NestJS** by the development team.
