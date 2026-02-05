@@ -1,6 +1,16 @@
-import { Controller, Get, Post, Body, Req, Res, Session } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Req,
+  Res,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { UsersService } from './users.service';
+import { AuthGuard } from '../common/guards';
 
 @Controller('users')
 export class UsersController {
@@ -45,6 +55,7 @@ export class UsersController {
   }
 
   @Get('logout')
+  @UseGuards(AuthGuard)
   logout(@Req() req: Request, @Res() res: Response) {
     req.session.destroy((err) => {
       if (err) {

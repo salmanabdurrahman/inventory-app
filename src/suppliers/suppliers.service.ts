@@ -3,7 +3,7 @@ import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Supplier } from './entities/supplier.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class SuppliersService {
@@ -16,7 +16,17 @@ export class SuppliersService {
     return this.supplierRepository.save(createSupplierDto);
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return this.supplierRepository.find({
+        where: [
+          { name: Like(`%${search}%`) },
+          { email: Like(`%${search}%`) },
+          { phone: Like(`%${search}%`) },
+          { address: Like(`%${search}%`) },
+        ],
+      });
+    }
     return this.supplierRepository.find();
   }
 

@@ -5,6 +5,25 @@
     Add Supplier
   </a>
 </div>
+<div style='margin-bottom: 1.5rem;'>
+  <form action='/suppliers' method='GET' class='search-box'>
+    <input
+      type='text'
+      name='search'
+      placeholder='Search suppliers...'
+      value='{{search}}'
+      class='search-input'
+    />
+    <button type='submit' class='btn-search'>
+      <i class='fas fa-search'></i>
+    </button>
+    {{#if search}}
+      <a href='/suppliers' class='btn-clear'>
+        <i class='fas fa-times'></i>
+      </a>
+    {{/if}}
+  </form>
+</div>
 {{#if suppliers.length}}
   <div class='stats-grid'>
     <div class='stat-card highlight'>

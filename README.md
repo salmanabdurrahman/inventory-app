@@ -25,7 +25,6 @@ A modern warehouse inventory management application built with NestJS, TypeORM, 
 
 | Resource              | Link                                                                                                                     |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Live Demo (Vercel)    | [https://inventory-app-nine-smoky.vercel.app](https://inventory-app-nine-smoky.vercel.app)                               |
 | Postman Documentation | [https://documenter.getpostman.com/view/38960737/2sBXc8o3XY](https://documenter.getpostman.com/view/38960737/2sBXc8o3XY) |
 
 ## Project Overview
@@ -311,75 +310,148 @@ pnpm run start:debug
 
 ## Deployment
 
-### Deploying to Vercel
+### Deploying to VPS (Ubuntu)
 
-This application is configured for deployment on Vercel with serverless functions.
+This guide covers deploying the application to a VPS running Ubuntu.
 
 #### Prerequisites
 
-1. A [Vercel](https://vercel.com) account
-2. A [TiDB Cloud](https://tidbcloud.com) account (for MySQL database)
-3. Git repository connected to Vercel
+- Ubuntu VPS (20.04 or later)
+- Domain name (optional, for SSL)
+- MySQL/MariaDB database or TiDB Cloud
 
-#### Step 1: Setup TiDB Cloud Database
+#### Step 1: Server Setup
 
-1. Create a free TiDB Cloud Serverless cluster
-2. Note down the connection details:
-   - Host (e.g., `gateway01.ap-southeast-1.prod.aws.tidbcloud.com`)
-   - Port (usually `4000`)
-   - Username
-   - Password
-   - Database name
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
 
-#### Step 2: Configure Vercel Environment Variables
+# Install Node.js 20.x
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
 
-In your Vercel project dashboard, go to **Settings → Environment Variables** and add:
+# Install pnpm
+npm install -g pnpm
 
-| Variable         | Value                         | Description                   |
-| ---------------- | ----------------------------- | ----------------------------- |
-| `NODE_ENV`       | `production`                  | Environment mode              |
-| `DB_HOST`        | `gateway01.xxx.tidbcloud.com` | TiDB Cloud host               |
-| `DB_PORT`        | `4000`                        | TiDB Cloud port               |
-| `DB_USERNAME`    | `your_tidb_username`          | TiDB Cloud username           |
-| `DB_PASSWORD`    | `your_tidb_password`          | TiDB Cloud password           |
-| `DB_DATABASE`    | `your_database_name`          | TiDB Cloud database name      |
-| `SESSION_SECRET` | `random_32_character_string`  | Secret for session encryption |
+# Install PM2 (process manager)
+npm install -g pm2
 
-#### Step 3: Deploy
+# Install Nginx (optional, for reverse proxy)
+sudo apt install -y nginx
+```
 
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Vercel will automatically detect the configuration and deploy
+#### Step 2: Clone and Setup Application
 
-#### Vercel Configuration
+```bash
+# Clone repository
+cd /var/www
+sudo git clone https://github.com/yourusername/inventory-app.git
+cd inventory-app
 
-The project includes a `vercel.json` configuration file that:
+# Set ownership
+sudo chown -R $USER:$USER /var/www/inventory-app
 
-- Uses `@vercel/node` for serverless function deployment
-- Includes `views/` and `public/` directories for templates and static assets
-- Routes all requests through the NestJS handler
+# Install dependencies
+pnpm install
 
-```json
-{
-  "version": 2,
-  "buildCommand": "npm run build",
-  "builds": [
-    {
-      "src": "dist/main.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["views/**", "public/**", "dist/**"]
-      }
+# Build application
+pnpm run build
+```
+
+#### Step 3: Configure Environment
+
+```bash
+# Create production environment file
+cp .env.example .env.production
+
+# Edit with your database credentials
+nano .env.production
+```
+
+Required environment variables:
+
+| Variable         | Description                 |
+| ---------------- | --------------------------- |
+| `NODE_ENV`       | `production`                |
+| `PORT`           | `3000` (or your preferred)  |
+| `DB_HOST`        | Database host               |
+| `DB_PORT`        | Database port               |
+| `DB_USERNAME`    | Database username           |
+| `DB_PASSWORD`    | Database password           |
+| `DB_DATABASE`    | Database name               |
+| `SESSION_SECRET` | Random 32+ character string |
+
+#### Step 4: Run with PM2
+
+```bash
+# Start application
+pm2 start dist/main.js --name inventory-app
+
+# Save PM2 configuration
+pm2 save
+
+# Enable auto-start on reboot
+pm2 startup
+```
+
+#### Step 5: Configure Nginx (Recommended)
+
+```bash
+# Create Nginx config
+sudo nano /etc/nginx/sites-available/inventory-app
+```
+
+Add this configuration:
+
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_cache_bypass $http_upgrade;
     }
-  ]
 }
 ```
 
+Enable the site:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/inventory-app /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+#### Step 6: SSL Certificate (Optional)
+
+```bash
+# Install Certbot
+sudo apt install -y certbot python3-certbot-nginx
+
+# Generate SSL certificate
+sudo certbot --nginx -d your-domain.com
+```
+
+#### Useful PM2 Commands
+
+| Command                     | Description            |
+| --------------------------- | ---------------------- |
+| `pm2 status`                | View running processes |
+| `pm2 logs inventory-app`    | View application logs  |
+| `pm2 restart inventory-app` | Restart application    |
+| `pm2 stop inventory-app`    | Stop application       |
+
 #### Important Notes
 
-- **SSL/TLS**: SSL is automatically enabled for TiDB Cloud connections in production
-- **Cold Starts**: Serverless functions may have cold start delays on first request
-- **Sessions**: Session data is stored in memory; for production, consider using Redis
+- **Firewall**: Open ports 80, 443, and 22 (SSH)
+- **SSL/TLS**: Use TLS for database connections in production
+- **Sessions**: Consider Redis for session storage in production
 
 ## Available Scripts
 

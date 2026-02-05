@@ -5,6 +5,25 @@
     Add Item
   </a>
 </div>
+<div style='margin-bottom: 1.5rem;'>
+  <form action='/items' method='GET' class='search-box'>
+    <input
+      type='text'
+      name='search'
+      placeholder='Search items...'
+      value='{{search}}'
+      class='search-input'
+    />
+    <button type='submit' class='btn-search'>
+      <i class='fas fa-search'></i>
+    </button>
+    {{#if search}}
+      <a href='/items' class='btn-clear'>
+        <i class='fas fa-times'></i>
+      </a>
+    {{/if}}
+  </form>
+</div>
 {{#if items.length}}
   <div class='stats-grid'>
     <div class='stat-card highlight'>

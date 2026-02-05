@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Item } from './entities/item.entity';
@@ -33,7 +33,13 @@ export class ItemsService {
     return this.itemRepository.save(item);
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return this.itemRepository.find({
+        where: { name: Like(`%${search}%`) },
+        relations: ['supplier'],
+      });
+    }
     return this.itemRepository.find({ relations: ['supplier'] });
   }
 

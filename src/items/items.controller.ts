@@ -6,17 +6,21 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   Render,
   Redirect,
   Res,
   Session,
+  UseGuards,
 } from '@nestjs/common';
 import { type Response } from 'express';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { AuthGuard } from '../common/guards';
 
 @Controller('items')
+@UseGuards(AuthGuard)
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
@@ -36,9 +40,12 @@ export class ItemsController {
 
   @Get()
   @Render('items/index')
-  async findAll(@Session() session: Record<string, any>) {
-    const items = await this.itemsService.findAll();
-    return { items, user: session?.user };
+  async findAll(
+    @Query('search') search: string,
+    @Session() session: Record<string, any>,
+  ) {
+    const items = await this.itemsService.findAll(search);
+    return { items, user: session?.user, search };
   }
 
   @Get(':id/edit')

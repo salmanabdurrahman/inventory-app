@@ -6,17 +6,21 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   Render,
   Redirect,
   Res,
   Session,
+  UseGuards,
 } from '@nestjs/common';
 import { type Response } from 'express';
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { AuthGuard } from '../common/guards';
 
 @Controller('suppliers')
+@UseGuards(AuthGuard)
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
@@ -35,9 +39,12 @@ export class SuppliersController {
 
   @Get()
   @Render('suppliers/index')
-  async findAll(@Session() session: Record<string, any>) {
-    const suppliers = await this.suppliersService.findAll();
-    return { suppliers, user: session?.user };
+  async findAll(
+    @Query('search') search: string,
+    @Session() session: Record<string, any>,
+  ) {
+    const suppliers = await this.suppliersService.findAll(search);
+    return { suppliers, user: session?.user, search };
   }
 
   @Get(':id/edit')
