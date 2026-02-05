@@ -19,6 +19,9 @@ export class Supplier {
   @Column()
   phone: string;
 
+  @Column({ nullable: true })
+  email: string;
+
   @Column()
   address: string;
 

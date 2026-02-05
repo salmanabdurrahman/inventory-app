@@ -1,0 +1,83 @@
+<div class='page-header'>
+  <h1 class='page-title'>Data Suppliers</h1>
+  <a href='/suppliers/create' class='btn btn-primary'>
+    <i class='fas fa-plus'></i>
+    Tambah Supplier
+  </a>
+</div>
+{{#if suppliers.length}}
+  <div class='stats-grid'>
+    <div class='stat-card highlight'>
+      <div class='stat-number'>{{suppliers.length}}</div>
+      <div class='stat-label'>Total Supplier</div>
+    </div>
+  </div>
+{{/if}}
+<div class='card'>
+  <div class='table-container'>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nama Supplier</th>
+          <th>No. HP</th>
+          <th>Email</th>
+          <th>Alamat</th>
+          <th style='text-align: center;'>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each suppliers}}
+          <tr>
+            <td><span class='badge badge-yellow'>#{{this.id}}</span></td>
+            <td style='font-weight: 600;'>{{this.name}}</td>
+            <td>{{this.phone}}</td>
+            <td>{{#if this.email}}{{this.email}}{{else}}<span
+                  style='color: #9ca3af;'
+                >-</span>{{/if}}</td>
+            <td>{{this.address}}</td>
+            <td>
+              <div class='actions'>
+                <a
+                  href='/suppliers/{{this.id}}/edit'
+                  class='action-btn action-btn-edit'
+                  title='Edit'
+                >
+                  <i class='fas fa-edit'></i>
+                </a>
+                <form
+                  action='/suppliers/{{this.id}}/delete'
+                  method='POST'
+                  style='display: inline; margin: 0;'
+                  onsubmit='return confirm("Yakin ingin menghapus supplier ini?")'
+                >
+                  <button
+                    type='submit'
+                    class='action-btn action-btn-delete'
+                    title='Hapus'
+                  >
+                    <i class='fas fa-trash'></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan='6' class='empty-state'>
+              <i class='fas fa-inbox'></i>
+              <p>Belum ada data supplier.</p>
+              <a
+                href='/suppliers/create'
+                class='btn btn-primary'
+                style='margin-top: 1rem;'
+              >
+                Tambah Sekarang
+              </a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
