@@ -25,10 +25,10 @@ export class Supplier {
   @Column()
   address: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'datetime' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 
   @OneToMany(() => Item, (item) => item.supplier)

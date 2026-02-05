@@ -20,6 +20,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: process.env.DB_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
+      // Fix for older MySQL versions that don't support datetime(6)
+      legacySpatialSupport: false,
+      // SSL configuration for TiDB Cloud Serverless (production only)
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? {
+              minVersion: 'TLSv1.2',
+              rejectUnauthorized: true,
+            }
+          : false,
+      extra: {
+        // Disable fractional seconds precision for compatibility
+        dateStrings: true,
+      },
     }),
     SuppliersModule,
     ItemsModule,

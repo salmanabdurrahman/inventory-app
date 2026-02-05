@@ -23,10 +23,10 @@ export class Item {
   @Column()
   price: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'datetime' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 
   @ManyToOne(() => Supplier, (supplier) => supplier.items, {
