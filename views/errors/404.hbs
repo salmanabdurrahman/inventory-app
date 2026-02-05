@@ -1,0 +1,175 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>404 - Page Not Found</title>
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap'
+      rel='stylesheet'
+    />
+    <link
+      rel='stylesheet'
+      href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Space Grotesk', sans-serif;
+        background-color: #f5f5f5;
+        background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
+        background-size: 20px 20px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+
+      .error-container {
+        text-align: center;
+        max-width: 500px;
+      }
+
+      .error-card {
+        background: #fff;
+        border: 3px solid #000;
+        border-radius: 12px;
+        box-shadow: 6px 6px 0px #000;
+        padding: 2.5rem;
+      }
+
+      .error-icon {
+        width: 80px;
+        height: 80px;
+        background: #fbbf24;
+        border: 3px solid #000;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+      }
+
+      .error-code {
+        font-size: 5rem;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+
+      .error-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+      }
+
+      .error-message {
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      .error-path {
+        background: #f1f5f9;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        word-break: break-all;
+      }
+
+      .error-path code {
+        color: #1e293b;
+        font-weight: 600;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border: 3px solid #000;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.15s;
+        text-decoration: none;
+        font-family: inherit;
+      }
+
+      .btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px 0px #000;
+      }
+
+      .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0px #000;
+      }
+
+      .btn-primary {
+        background: #fbbf24;
+        color: #000;
+      }
+
+      .btn-secondary {
+        background: #fff;
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='error-container'>
+      <div class='error-card'>
+        <div class='error-icon'>
+          <i class='fas fa-search'></i>
+        </div>
+        <div class='error-code'>404</div>
+        <h1 class='error-title'>Page Not Found</h1>
+        <p class='error-message'>
+          {{#if message}}
+            {{message}}
+          {{else}}
+            The page you're looking for doesn't exist or has been moved.
+          {{/if}}
+        </p>
+        {{#if path}}
+          <div class='error-path'>
+            Requested:
+            <code>{{path}}</code>
+          </div>
+        {{/if}}
+        <div class='btn-group'>
+          <a href='/' class='btn btn-primary'>
+            <i class='fas fa-home'></i>
+            Go to Dashboard
+          </a>
+          <a href='javascript:history.back()' class='btn btn-secondary'>
+            <i class='fas fa-arrow-left'></i>
+            Go Back
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

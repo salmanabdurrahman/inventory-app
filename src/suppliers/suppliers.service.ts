@@ -1,19 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Supplier } from './entities/supplier.entity';
 import { Like, Repository } from 'typeorm';
+import { EntityNotFoundException } from '../common/exceptions';
 
 @Injectable()
 export class SuppliersService {
+  private readonly logger = new Logger(SuppliersService.name);
+
   constructor(
     @InjectRepository(Supplier)
     private readonly supplierRepository: Repository<Supplier>,
   ) {}
 
-  create(createSupplierDto: CreateSupplierDto) {
-    return this.supplierRepository.save(createSupplierDto);
+  async create(createSupplierDto: CreateSupplierDto) {
+    this.logger.log(`Creating supplier: ${createSupplierDto.name}`);
+    const supplier = await this.supplierRepository.save(createSupplierDto);
+    this.logger.log(`Supplier created successfully with ID: ${supplier.id}`);
+    return supplier;
   }
 
   findAll(search?: string) {
@@ -30,15 +36,41 @@ export class SuppliersService {
     return this.supplierRepository.find();
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
+    const supplier = await this.supplierRepository.findOne({ where: { id } });
+
+    if (!supplier) {
+      throw new EntityNotFoundException('Supplier', id);
+    }
+
+    return supplier;
+  }
+
+  async update(id: number, updateSupplierDto: UpdateSupplierDto) {
+    this.logger.log(`Updating supplier with ID: ${id}`);
+
+    const supplier = await this.supplierRepository.findOne({ where: { id } });
+
+    if (!supplier) {
+      throw new EntityNotFoundException('Supplier', id);
+    }
+
+    await this.supplierRepository.update(id, updateSupplierDto);
+    this.logger.log(`Supplier updated successfully: ${id}`);
     return this.supplierRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateSupplierDto: UpdateSupplierDto) {
-    return this.supplierRepository.update(id, updateSupplierDto);
-  }
+  async remove(id: number) {
+    this.logger.log(`Deleting supplier with ID: ${id}`);
 
-  remove(id: number) {
-    return this.supplierRepository.delete(id);
+    const supplier = await this.supplierRepository.findOne({ where: { id } });
+
+    if (!supplier) {
+      throw new EntityNotFoundException('Supplier', id);
+    }
+
+    await this.supplierRepository.delete(id);
+    this.logger.log(`Supplier deleted successfully: ${id}`);
+    return { deleted: true, id };
   }
 }
