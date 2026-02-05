@@ -7,8 +7,8 @@ import { itemsData } from '../data';
 import { SupplierSeederService } from './supplier.seeder';
 
 /**
- * Service untuk seeding data Item
- * Membutuhkan SupplierSeederService untuk relasi item-supplier
+ * Service for seeding Item data
+ * Requires SupplierSeederService for item-supplier relation
  */
 @Injectable()
 export class ItemSeederService {
@@ -21,8 +21,8 @@ export class ItemSeederService {
   ) {}
 
   /**
-   * Seed data item ke database
-   * Membutuhkan suppliers yang sudah di-seed terlebih dahulu
+   * Seed item data to database
+   * Requires suppliers to be seeded first
    * @returns Array of created items
    */
   async seed(): Promise<Item[]> {
@@ -30,7 +30,7 @@ export class ItemSeederService {
     const suppliers = await this.supplierSeederService.getSuppliersInOrder();
 
     if (suppliers.length === 0) {
-      this.logger.warn('⚠ No suppliers found. Please seed suppliers first.');
+      this.logger.warn('No suppliers found. Please seed suppliers first.');
       return [];
     }
 
@@ -41,7 +41,7 @@ export class ItemSeederService {
 
       if (!supplier) {
         this.logger.warn(
-          `⚠ Supplier with index ${itemData.supplierIndex} not found for item: ${itemData.name}`,
+          `Supplier with index ${itemData.supplierIndex} not found for item: ${itemData.name}`,
         );
         continue;
       }
@@ -66,10 +66,10 @@ export class ItemSeederService {
         const savedItem = await this.itemRepository.save(item);
         createdItems.push(savedItem);
         this.logger.log(
-          `✓ Created item: ${itemData.name} (Supplier: ${supplier.name})`,
+          `Created item: ${itemData.name} (Supplier: ${supplier.name})`,
         );
       } else {
-        this.logger.debug(`⊘ Item already exists: ${itemData.name}`);
+        this.logger.debug(`Item already exists: ${itemData.name}`);
       }
     }
 

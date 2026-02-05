@@ -3,18 +3,18 @@
     <h1 class='page-title'><i
         class='fas fa-plus-circle'
         style='margin-right: 0.5rem;'
-      ></i>Tambah Item</h1>
+      ></i>Add Item</h1>
   </div>
   <div class='card'>
     <form action='/items' method='POST'>
       <div class='form-group'>
-        <label class='form-label'>Nama Item
+        <label class='form-label'>Item Name
           <span style='color: #ef4444;'>*</span></label>
         <input
           type='text'
           name='name'
           class='form-input'
-          placeholder='Contoh: Laptop ASUS ROG'
+          placeholder='e.g. Laptop ASUS ROG'
           required
         />
       </div>
@@ -22,32 +22,32 @@
         <label class='form-label'>Supplier
           <span style='color: #ef4444;'>*</span></label>
         <select name='supplierId' class='form-input' required>
-          <option value=''>-- Pilih Supplier --</option>
+          <option value=''>-- Select Supplier --</option>
           {{#each suppliers}}
             <option value='{{this.id}}'>{{this.name}}</option>
           {{/each}}
         </select>
       </div>
       <div class='form-group'>
-        <label class='form-label'>Stok
+        <label class='form-label'>Stock
           <span style='color: #ef4444;'>*</span></label>
         <input
           type='number'
           name='stock'
           class='form-input'
-          placeholder='Contoh: 100'
+          placeholder='e.g. 100'
           min='0'
           required
         />
       </div>
       <div class='form-group'>
-        <label class='form-label'>Harga (Rp)
+        <label class='form-label'>Price (Rp)
           <span style='color: #ef4444;'>*</span></label>
         <input
           type='number'
           name='price'
           class='form-input'
-          placeholder='Contoh: 15000000'
+          placeholder='e.g. 15000000'
           min='0'
           required
         />
@@ -57,11 +57,11 @@
       >
         <a href='/items' class='btn btn-secondary'>
           <i class='fas fa-arrow-left'></i>
-          Batal
+          Cancel
         </a>
         <button type='submit' class='btn btn-primary'>
           <i class='fas fa-save'></i>
-          Simpan
+          Save
         </button>
       </div>
     </form>

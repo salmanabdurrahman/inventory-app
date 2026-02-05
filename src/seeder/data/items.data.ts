@@ -1,18 +1,18 @@
 /**
- * Data seeder untuk Item
- * File ini berisi data dummy item yang akan digunakan untuk seeding database
- * supplierIndex mengacu pada index supplier dari suppliersData
+ * Item seed data
+ * This file contains dummy item data for database seeding
+ * supplierIndex refers to the supplier index from suppliersData
  */
 
 export interface ItemSeedData {
   name: string;
   stock: number;
   price: number;
-  supplierIndex: number; // Index dari supplier di suppliersData (0-based)
+  supplierIndex: number; // Index of supplier in suppliersData (0-based)
 }
 
 export const itemsData: ItemSeedData[] = [
-  // Items dari PT Elektronik Jaya (index 0)
+  // Items from PT Elektronik Jaya (index 0)
   {
     name: 'Laptop ASUS VivoBook 14',
     stock: 25,
@@ -32,7 +32,7 @@ export const itemsData: ItemSeedData[] = [
     supplierIndex: 0,
   },
 
-  // Items dari CV Maju Bersama (index 1)
+  // Items from CV Maju Bersama (index 1)
   {
     name: 'Printer HP LaserJet Pro',
     stock: 15,
@@ -46,7 +46,7 @@ export const itemsData: ItemSeedData[] = [
     supplierIndex: 1,
   },
 
-  // Items dari PT Global Supplies Indonesia (index 2)
+  // Items from PT Global Supplies Indonesia (index 2)
   {
     name: 'UPS APC 1000VA',
     stock: 30,
@@ -66,7 +66,7 @@ export const itemsData: ItemSeedData[] = [
     supplierIndex: 2,
   },
 
-  // Items dari UD Sumber Makmur (index 3)
+  // Items from UD Sumber Makmur (index 3)
   {
     name: 'Mouse Wireless Logitech M350',
     stock: 100,
@@ -86,7 +86,7 @@ export const itemsData: ItemSeedData[] = [
     supplierIndex: 3,
   },
 
-  // Items dari PT Nusantara Trading (index 4)
+  // Items from PT Nusantara Trading (index 4)
   {
     name: 'SSD Samsung 500GB',
     stock: 80,

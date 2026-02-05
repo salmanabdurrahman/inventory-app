@@ -1,15 +1,15 @@
 <div class='page-header'>
-  <h1 class='page-title'>Data Suppliers</h1>
+  <h1 class='page-title'>Suppliers Data</h1>
   <a href='/suppliers/create' class='btn btn-primary'>
     <i class='fas fa-plus'></i>
-    Tambah Supplier
+    Add Supplier
   </a>
 </div>
 {{#if suppliers.length}}
   <div class='stats-grid'>
     <div class='stat-card highlight'>
       <div class='stat-number'>{{suppliers.length}}</div>
-      <div class='stat-label'>Total Supplier</div>
+      <div class='stat-label'>Total Suppliers</div>
     </div>
   </div>
 {{/if}}
@@ -19,11 +19,11 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nama Supplier</th>
-          <th>No. HP</th>
+          <th>Supplier Name</th>
+          <th>Phone</th>
           <th>Email</th>
-          <th>Alamat</th>
-          <th style='text-align: center;'>Aksi</th>
+          <th>Address</th>
+          <th style='text-align: center;'>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -49,12 +49,12 @@
                   action='/suppliers/{{this.id}}/delete'
                   method='POST'
                   style='display: inline; margin: 0;'
-                  onsubmit='return confirm("Yakin ingin menghapus supplier ini?")'
+                  onsubmit='return confirm("Are you sure you want to delete this supplier?")'
                 >
                   <button
                     type='submit'
                     class='action-btn action-btn-delete'
-                    title='Hapus'
+                    title='Delete'
                   >
                     <i class='fas fa-trash'></i>
                   </button>
@@ -66,13 +66,13 @@
           <tr>
             <td colspan='6' class='empty-state'>
               <i class='fas fa-inbox'></i>
-              <p>Belum ada data supplier.</p>
+              <p>No supplier data yet.</p>
               <a
                 href='/suppliers/create'
                 class='btn btn-primary'
                 style='margin-top: 1rem;'
               >
-                Tambah Sekarang
+                Add Now
               </a>
             </td>
           </tr>

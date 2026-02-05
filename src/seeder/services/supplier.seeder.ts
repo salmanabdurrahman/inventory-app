@@ -5,8 +5,8 @@ import { Supplier } from '../../suppliers/entities/supplier.entity';
 import { suppliersData } from '../data';
 
 /**
- * Service untuk seeding data Supplier
- * Menggunakan pattern singleton untuk memastikan data hanya di-seed sekali
+ * Service for seeding Supplier data
+ * Uses singleton pattern to ensure data is only seeded once
  */
 @Injectable()
 export class SupplierSeederService {
@@ -18,8 +18,8 @@ export class SupplierSeederService {
   ) {}
 
   /**
-   * Seed data supplier ke database
-   * Menggunakan upsert pattern - hanya insert jika belum ada
+   * Seed supplier data to database
+   * Uses upsert pattern - only insert if not exists
    * @returns Array of created suppliers
    */
   async seed(): Promise<Supplier[]> {
@@ -40,10 +40,10 @@ export class SupplierSeederService {
 
         const savedSupplier = await this.supplierRepository.save(supplier);
         createdSuppliers.push(savedSupplier);
-        this.logger.log(`✓ Created supplier: ${supplierData.name}`);
+        this.logger.log(`Created supplier: ${supplierData.name}`);
       } else {
         createdSuppliers.push(existingSupplier);
-        this.logger.debug(`⊘ Supplier already exists: ${supplierData.name}`);
+        this.logger.debug(`Supplier already exists: ${supplierData.name}`);
       }
     }
 

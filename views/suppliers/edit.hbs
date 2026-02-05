@@ -8,26 +8,26 @@
   <div class='card'>
     <form action='/suppliers/{{supplier.id}}/update' method='POST'>
       <div class='form-group'>
-        <label class='form-label'>Nama Supplier
+        <label class='form-label'>Supplier Name
           <span style='color: #ef4444;'>*</span></label>
         <input
           type='text'
           name='name'
           value='{{supplier.name}}'
           class='form-input'
-          placeholder='Contoh: PT Sumber Makmur'
+          placeholder='e.g. PT Sumber Makmur'
           required
         />
       </div>
       <div class='form-group'>
-        <label class='form-label'>No. Handphone
+        <label class='form-label'>Phone Number
           <span style='color: #ef4444;'>*</span></label>
         <input
           type='text'
           name='phone'
           value='{{supplier.phone}}'
           class='form-input'
-          placeholder='Contoh: 081234567890'
+          placeholder='e.g. 081234567890'
           required
         />
       </div>
@@ -38,17 +38,17 @@
           name='email'
           value='{{supplier.email}}'
           class='form-input'
-          placeholder='Contoh: supplier@email.com'
+          placeholder='e.g. supplier@email.com'
         />
       </div>
       <div class='form-group'>
-        <label class='form-label'>Alamat
+        <label class='form-label'>Address
           <span style='color: #ef4444;'>*</span></label>
         <textarea
           name='address'
           class='form-input'
           rows='3'
-          placeholder='Contoh: Jl. Industri No. 123, Jakarta'
+          placeholder='e.g. Jl. Industri No. 123, Jakarta'
           required
         >{{supplier.address}}</textarea>
       </div>
@@ -57,7 +57,7 @@
       >
         <a href='/suppliers' class='btn btn-secondary'>
           <i class='fas fa-arrow-left'></i>
-          Batal
+          Cancel
         </a>
         <button type='submit' class='btn btn-warning'>
           <i class='fas fa-save'></i>

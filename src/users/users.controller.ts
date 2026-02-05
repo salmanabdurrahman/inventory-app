@@ -39,7 +39,7 @@ export class UsersController {
 
     return res.render('users/login', {
       layout: false,
-      error: 'Email atau password salah!',
+      error: 'Invalid email or password!',
       email: body.email,
     });
   }

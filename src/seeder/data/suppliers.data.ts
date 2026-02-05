@@ -1,6 +1,6 @@
 /**
- * Data seeder untuk Supplier
- * File ini berisi data dummy supplier yang akan digunakan untuk seeding database
+ * Supplier seed data
+ * This file contains dummy supplier data for database seeding
  */
 
 export interface SupplierSeedData {
