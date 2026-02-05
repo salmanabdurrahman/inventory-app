@@ -5,10 +5,8 @@ import { join } from 'node:path';
 import session from 'express-session';
 import methodOverride from 'method-override';
 
-let app: NestExpressApplication;
-
 async function bootstrap() {
-  app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Method override for PUT/PATCH/DELETE via HTML forms
   app.use(methodOverride('_method'));
@@ -31,27 +29,8 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  await app.init();
-
-  // Only listen if not in serverless environment
-  if (process.env.VERCEL !== '1') {
-    await app.listen(process.env.PORT ?? 3000);
-    console.log('Application running on http://localhost:3000');
-  }
-
-  return app;
+  await app.listen(process.env.PORT ?? 3000);
+  console.log('Application running on http://localhost:3000');
 }
 
-// Export for Vercel serverless
-export default async function handler(req: any, res: any) {
-  if (!app) {
-    app = await bootstrap();
-  }
-  const expressApp = app.getHttpAdapter().getInstance();
-  return expressApp(req, res);
-}
-
-// Start standalone server if not on Vercel
-if (process.env.VERCEL !== '1') {
-  bootstrap();
-}
+bootstrap();
