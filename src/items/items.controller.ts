@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Render,
+  Redirect,
+  Res,
+} from '@nestjs/common';
+import { type Response } from 'express';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
@@ -7,28 +17,48 @@ import { UpdateItemDto } from './dto/update-item.dto';
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
+  @Get('create')
+  @Render('items/create')
+  async createPage() {
+    const suppliers = await this.itemsService.getAllSuppliers();
+    return { suppliers };
+  }
+
   @Post()
-  create(@Body() createItemDto: CreateItemDto) {
-    return this.itemsService.create(createItemDto);
+  @Redirect('/items')
+  async create(@Body() createItemDto: CreateItemDto) {
+    await this.itemsService.create(createItemDto);
+    return { url: '/items' };
   }
 
   @Get()
-  findAll() {
-    return this.itemsService.findAll();
+  @Render('items/index')
+  async findAll() {
+    const items = await this.itemsService.findAll();
+    return { items };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itemsService.findOne(+id);
+  @Get(':id/edit')
+  @Render('items/edit')
+  async editPage(@Param('id') id: string) {
+    const item = await this.itemsService.findOne(+id);
+    const suppliers = await this.itemsService.getAllSuppliers();
+    return { item, suppliers };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemsService.update(+id, updateItemDto);
+  @Post(':id/update')
+  async update(
+    @Param('id') id: string,
+    @Body() updateItemDto: UpdateItemDto,
+    @Res() res: Response,
+  ) {
+    await this.itemsService.update(+id, updateItemDto);
+    return res.redirect('/items');
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.itemsService.remove(+id);
+  @Post(':id/delete')
+  async remove(@Param('id') id: string, @Res() res: Response) {
+    await this.itemsService.remove(+id);
+    return res.redirect('/items');
   }
 }

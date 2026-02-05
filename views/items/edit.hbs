@@ -1,0 +1,88 @@
+<div style='max-width: 500px; margin: 0 auto;'>
+  <div class='page-header'>
+    <h1 class='page-title'><i
+        class='fas fa-edit'
+        style='margin-right: 0.5rem;'
+      ></i>Edit Item</h1>
+  </div>
+  <div class='card'>
+    <form action='/items/{{item.id}}/update' method='POST'>
+      <div class='form-group'>
+        <label class='form-label'>Nama Item
+          <span style='color: #ef4444;'>*</span></label>
+        <input
+          type='text'
+          name='name'
+          value='{{item.name}}'
+          class='form-input'
+          placeholder='Contoh: Laptop ASUS ROG'
+          required
+        />
+      </div>
+      <div class='form-group'>
+        <label class='form-label'>Supplier
+          <span style='color: #ef4444;'>*</span></label>
+        <select
+          name='supplierId'
+          class='form-input'
+          id='supplierSelect'
+          required
+        >
+          <option value=''>-- Pilih Supplier --</option>
+          {{#each suppliers}}
+            <option value='{{this.id}}'>{{this.name}}</option>
+          {{/each}}
+        </select>
+        <input
+          type='hidden'
+          id='currentSupplierId'
+          value='{{item.supplier.id}}'
+        />
+      </div>
+      <div class='form-group'>
+        <label class='form-label'>Stok
+          <span style='color: #ef4444;'>*</span></label>
+        <input
+          type='number'
+          name='stock'
+          value='{{item.stock}}'
+          class='form-input'
+          placeholder='Contoh: 100'
+          min='0'
+          required
+        />
+      </div>
+      <div class='form-group'>
+        <label class='form-label'>Harga (Rp)
+          <span style='color: #ef4444;'>*</span></label>
+        <input
+          type='number'
+          name='price'
+          value='{{item.price}}'
+          class='form-input'
+          placeholder='Contoh: 15000000'
+          min='0'
+          required
+        />
+      </div>
+      <div
+        style='display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;'
+      >
+        <a href='/items' class='btn btn-secondary'>
+          <i class='fas fa-arrow-left'></i>
+          Batal
+        </a>
+        <button type='submit' class='btn btn-warning'>
+          <i class='fas fa-save'></i>
+          Update
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() { var
+  currentSupplierId = document.getElementById('currentSupplierId').value; var
+  select = document.getElementById('supplierSelect'); if (currentSupplierId) {
+  select.value = currentSupplierId; } });
+</script>
