@@ -1,21 +1,40 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/entities/user.entity';
+import { SupplierSeederService, ItemSeederService } from './services';
 
+/**
+ * Main Seeder Service
+ * Orchestrates all seeding operations in the correct order
+ */
 @Injectable()
 export class SeederService implements OnModuleInit {
+  private readonly logger = new Logger(SeederService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly supplierSeederService: SupplierSeederService,
+    private readonly itemSeederService: ItemSeederService,
   ) {}
 
   async onModuleInit() {
+    this.logger.log('=== Starting Database Seeding ===');
+
+    // Seed in order of dependencies
     await this.seedUsers();
+    await this.supplierSeederService.seed();
+    await this.itemSeederService.seed();
+
+    this.logger.log('=== Database Seeding Completed ===');
   }
 
-  async seedUsers() {
+  /**
+   * Seed admin user
+   */
+  private async seedUsers() {
     const existingAdmin = await this.userRepository.findOne({
       where: { email: 'admin@gudangapp.com' },
     });
@@ -32,11 +51,11 @@ export class SeederService implements OnModuleInit {
       });
 
       await this.userRepository.save(admin);
-      console.log('Seeder: Admin user created successfully');
-      console.log(' Email: admin@gudangapp.com');
-      console.log(' Password: admin123');
+      this.logger.log('Created admin user');
+      this.logger.log('Email: admin@gudangapp.com');
+      this.logger.log('Password: admin123');
     } else {
-      console.log('Seeder: Admin user already exists');
+      this.logger.debug('Admin user already exists');
     }
   }
 }
